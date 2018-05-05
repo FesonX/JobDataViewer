@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %} IT工程师需求及预测平台 {% endblock %}
+
+{% block content %}
+
+<div class='panel-default' id="salary_table">
+        {# Post average salary table - 岗位平均工资表 #}
+        <table class="table table-bordered table-hover">
+        <caption>{{city}}岗位平均工资排名表 Source: 51Job.com</caption>
+        <thead>
+            <tr>
+            <th>职位</th>
+            <th>平均工资</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for kd, avg_salary in keyword_dict.items %}
+            <tr>
+            <td>{{ kd }}</td>
+            <td>{{ avg_salary }}k</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+</div>
+
+{% endblock %}
+
+{% block js %}
+{% endblock %}

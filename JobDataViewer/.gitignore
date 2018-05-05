@@ -1,0 +1,9 @@
+/.idea/
+/.idea/workspace.xml
+/.idea/libraries
+*.py[cod]
+*.so
+*.egg
+*.egg-info
+dist
+build

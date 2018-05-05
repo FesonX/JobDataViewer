@@ -1,0 +1,395 @@
+<!-- data_viewer.html -->
+{% extends 'base.html' %}
+
+{% block title %} IT工程师需求及预测平台 {% endblock %}
+
+{% block content %}
+
+{#   Map of China - 中国地图  #}
+<!-- <div id="container" style="height: 500px; min-width: 310px; max-width: 800px; margin: 0 auto"></div> -->
+    <br>
+    {#  Post average salary bar charts and trends - 岗位平均工资条形图及趋势图   #}
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="https://img.hcharts.cn/highcharts/modules/drilldown.js"></script>
+    <div id="container1" style="width: 950px; height: 650px; margin: 0 auto"></div>
+
+    <div id="container2" style="height: 750px; min-width: 310px; max-width: 800px; margin: 0 auto"></div>
+
+    <div id="container3" style="height: 750px; min-width: 310px; max-width: 800px; margin: 0 auto"></div>
+
+    <div class='panel-default' id="salary_table">
+        {# Post average salary table - 岗位平均工资表 #}
+        <table class="table table-bordered table-hover">
+        <caption>{{city}}岗位平均工资排名表 Source: 51Job.com</caption>
+        <thead>
+            <tr>
+            <th>职位</th>
+            <th>平均工资</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for kd, avg_salary in keyword_dict.items %}
+            <tr>
+            <td>{{ kd }}</td>
+            <td>{{ avg_salary }}k</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    </div>
+
+{% endblock %}
+
+
+{% block js %}
+
+<script type="text/javascript">
+    $(function () {
+      $('#container3').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: '各大城市职位数量占比'
+        },
+        tooltip: {
+            headerFormat: '{series.name}<br>',
+            pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                },
+                states: {
+                    hover: {
+                        enabled: false
+                    }
+                },
+                slicedOffset: 20,         // 突出间距
+                point: {                  // 每个扇区是数据点对象，所以事件应该写在 point 下面
+                    events: {
+                        // 鼠标滑过是，突出当前扇区
+                        mouseOver: function() {
+                            this.slice();
+                        },
+                        // 鼠标移出时，收回突出显示
+                        mouseOut: function() {
+                            this.slice();
+                        },
+                        // 默认是点击突出，这里屏蔽掉
+                        click: function() {
+                            return false;
+                        }
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: '职位信息占比',
+            data: [
+                {% for item in cities %}
+                  {{item|safe}},
+                {% endfor %}
+            ]
+        }]
+    });
+});
+</script>
+
+<script language="JavaScript">
+$(document).ready(function() {
+   var chart = {
+      type: 'column'
+   };
+   var title = {
+      text: '岗位平均工资'
+   };
+   var subtitle = {
+      text: 'Source: 51job.com'
+   };
+   var xAxis = {
+      type: 'category'
+   };
+   var yAxis = {
+      min: 0,
+      title: {
+         text: '平均工资 (k)'
+      }
+   };
+   var tooltip = {
+       headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+       pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+         '<td style="padding:0"><b>{point.y:.1f} k</b></td></tr>',
+       footerFormat: '</table>',
+       shared: true,
+       useHTML: true,
+       valueSuffix: '点击职位名称查看工资走向'
+
+   };
+   var plotOptions = {
+      column: {
+         pointPadding: 0.2,
+         borderWidth: 4
+      }
+   };
+   var credits = {
+      enabled: false
+   };
+
+
+    var series = [
+    {% for k, v in series.items %}
+    {
+        name: '{{ k }}',
+        data: [ {name: '{{ k }}', y: {{ v }}, drilldown: '{{ k }}' }],
+    },
+    {% endfor %}
+    ];
+
+    var drilldown = {
+        series: [
+            {% for k, v in series1.items %}
+                {
+                type: 'line',
+                id: '{{ k }}',
+                name: '{{ k }}',
+                data: [
+                    {% for i in v %}
+                        {% for j in i %}
+                            {% if forloop.first %} ['{{ j | date:"Y-m-d" }}', {% endif %}
+                            {% if forloop.last %} {{ j }}], {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                ]
+                },
+            {% endfor %}
+            ]};
+   var json = {};
+   json.chart = chart;
+   json.title = title;
+   json.subtitle = subtitle;
+   json.tooltip = tooltip;
+   json.xAxis = xAxis;
+   json.yAxis = yAxis;
+   json.series = series;
+   json.plotOptions = plotOptions;
+   json.credits = credits;
+   json.drilldown = drilldown;
+   $('#container1').highcharts(json);
+
+});
+</script>
+
+<script language="JavaScript">
+    $(document).ready(function() {
+   var chart = {
+      type: 'column'
+   };
+   var title = {
+      text: '热门职位数量排名'
+   };
+   var subtitle = {
+      text: 'Source: 51job.com'
+   };
+   var xAxis = {
+      type: 'category'
+   };
+   var yAxis = {
+      min: 0,
+      title: {
+         text: '职位数量(个)'
+      }
+   };
+   var tooltip = {
+       headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+       pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+         '<td style="padding:0"><b>{point.y:.1f} 个</b></td></tr>',
+       footerFormat: '</table>',
+       shared: true,
+       useHTML: true
+   };
+   var plotOptions = {
+      column: {
+         pointPadding: 0.2,
+         borderWidth: 4
+      }
+   };
+   var credits = {
+      enabled: false
+   };
+
+
+    var series = [
+    {% for key_word, value in top_job_counts.items %}
+    {
+        name: '{{ key_word }}',
+        data: [ {name: '{{ key_word }}', y: {{ value }}}],
+    },
+    {% endfor %}
+    ];
+
+
+   var json = {};
+   json.chart = chart;
+   json.title = title;
+   json.subtitle = subtitle;
+   json.tooltip = tooltip;
+   json.xAxis = xAxis;
+   json.yAxis = yAxis;
+   json.series = series;
+   json.plotOptions = plotOptions;
+   json.credits = credits;
+
+   $('#container2').highcharts(json);
+
+});
+</script>
+
+<!-- <script language="JavaScript">
+    Highcharts.setOptions({
+    lang: {
+        drillUpText: '< 返回 “{series.name}”'
+    }
+});
+var map = null,
+    geochina = 'https://data.jianshukeji.com/jsonp?filename=geochina/',
+    unDrilldown = ['taiwan', 'xianggang', 'aomen'],
+    municipality = ['beijing', 'chongqing', 'tianjin', 'shanghai'];
+// 获取中国地图数据并初始化图表
+$.getJSON(geochina + 'china.json&callback=?', function(mapdata) {
+    var data = [];
+    // 随机数据
+    Highcharts.each(mapdata.features, function(md, index) {
+        data.push({
+            name: md.properties.name,
+            drilldown: md.properties.filename,
+            value: Math.floor((Math.random() * 100) + 1) // 生成 1 ~ 100 随机值
+        });
+    });
+    map = new Highcharts.Map('container', {
+        chart: {
+            events: {
+                drilldown: function(e) {
+                    // 异步下钻
+                    var pointName = e.point.properties.fullname;
+                    if (e.point.drilldown && unDrilldown.indexOf(e.point.drilldown) === -1) {
+
+                        if (municipality.indexOf(pointName)){
+                            map.showLoading('下钻中，请稍后...');
+                            if (pointName.indexOf("北京市")){
+                                pointName = "北京";
+                            }
+                            else if(pointName.indexOf("重庆市")){
+                                pointName = "重庆";
+                            }else if(pointName.indexOf("上海市")){
+                                pointName = "上海";
+                            }else{
+                                pointName = "天津";
+                            }
+
+                        // 获取二级行政地区数据并更新图表
+                        $.getJSON(geochina +   e.point.drilldown + '.json&callback=?', function(data) {
+                            data = Highcharts.geojson(data);
+                            Highcharts.each(data, function(d) {
+                                d.value = Math.floor((Math.random() * 100) + 1); // 生成 1 ~ 100 随机值
+                            });
+                            map.hideLoading();
+
+                            map.addSeriesAsDrilldown(e.point, {
+                                name: e.point.name,
+                                data: data,
+                                dataLabels: {
+                                    enabled: true,
+                                    format: '<a href="/city/{point.properties.parent}"> {point.name} </a>'
+                                }
+                            });
+                            map.setTitle({
+                                text: pointName
+                            });
+                        });
+                        }else{
+                            map.showLoading('下钻中，请稍后...');
+                        // 获取二级行政地区数据并更新图表
+                        $.getJSON(geochina +   e.point.drilldown + '.json&callback=?', function(data) {
+                            data = Highcharts.geojson(data);
+                            Highcharts.each(data, function(d) {
+                                d.value = Math.floor((Math.random() * 100) + 1); // 生成 1 ~ 100 随机值
+                            });
+                            map.hideLoading();
+                            map.addSeriesAsDrilldown(e.point, {
+                                name: e.point.name,
+                                data: data,
+                                dataLabels: {
+                                    enabled: true,
+                                    format: '<a href="/city/{point.name}"> {point.name} </a>'
+                                }
+                            });
+                            map.setTitle({
+                                text: pointName
+                            });
+                        });
+                        }
+                    }
+                },
+                drillup: function() {
+                    map.setTitle({
+                        text: '中国'
+                    });
+                }
+            }
+        },
+        title: {
+            text: '中国地图'
+        },
+        mapNavigation: {
+            enabled: true,
+            buttonOptions: {
+                verticalAlign: 'bottom'
+            }
+        },
+        tooltip: {
+            useHTML: true,
+            headerFormat: '<table><tr><td>{point.name}</td></tr>',
+            pointFormat: '<tr><td>全称</td><td>{point.properties.fullname}</td></tr>' +
+            '<tr><td>行政编号</td><td>{point.properties.areacode}</td></tr>' +
+            '<tr><td>父级</td><td>{point.properties.parent}</td></tr>' +
+            '<tr><td>经纬度</td><td>{point.properties.longitude},{point.properties.latitude}</td></tr>' ,
+            footerFormat: '</table>'
+        },
+        colorAxis: {
+            min: 0,
+            minColor: '#fff',
+            maxColor: '#006cee',
+            labels:{
+                style:{
+                    "color":"red","fontWeight":"bold"
+                }
+            }
+        },
+        series: [{
+            data: data,
+            mapData: mapdata,
+            joinBy: 'name',
+            name: '中国地图',
+            states: {
+                hover: {
+                    color: '#a4edba'
+                }
+            }
+        }]
+    });
+});
+</script> -->
+
+{% endblock %}
