@@ -26,7 +26,8 @@ urlpatterns = [
     url(r'^$', views.dataViewer, name='home'),
     # url(r'^$', views.index, name='index'),
     # url(r'^city/', views.homepage, name='city'),
-    url(r'^chart/', views.dataViewer, name='chart')
+    url(r'^chart/', views.dataViewer, name='chart'),
+    url(r'^get_trend_by_word/$', views.get_trend_by_word, name='get_trend_by_word')
 ]
 
 if settings.DEBUG:

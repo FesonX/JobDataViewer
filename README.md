@@ -1,7 +1,11 @@
 # JobDataViewer
 
 # A Django Project For Data in JobCrawler Visualization.
-Based on Python3, mongodb
+Developing Environment:
+1. Python Ver: 3.6
+2. Django 1.11.8
+3. Data Visualization Tool: Highcharts
+4. Database: MongoDB
 
 ## Data
 Data From 51Job
@@ -28,4 +32,12 @@ use Ctrl + C to stop server.
 ![04](/TestImages/04.png)
 
 * Average Salary Table
-![05](/TestImages/04.png)
+![05](/TestImages/05.png)
+
+## Version Update
+
+## Ver1.1 5/24,2018
+### Ajax Support Available
+Now Salary Trend Function developed with Ajax, bringing higher speed than ver 1.0
+Before using ajax, open the page cost 1min 30s, comparing 18s-20s now.
+Special thanks to [@huangjiarong](https://github.com/huangjiarong)

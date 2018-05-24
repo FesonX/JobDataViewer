@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.template.loader import get_template
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core.paginator import Paginator
 
 from .models import JobField
@@ -10,6 +10,7 @@ import datetime
 import json
 from mongoengine import connect
 from mongoengine.queryset.visitor import Q
+
 
 # Connect to mongodb
 connect("Spider")
@@ -93,17 +94,15 @@ def get_salary_trend(job_info, keyword, city):
     # 获取工资趋势
     if(city != '全国' or city != '异地招聘'):
         pattern = r'^(' + city + '|' + city + ')'
-        # items = JobField.objects(__raw__={'key_word':keyword, 'job_city': city})
         items = JobField.objects(Q(key_word=keyword) & Q(job_city=city))
     else:
-        # items = JobField.objects(__raw__={'key_word':keyword})
         items = JobField.objects(key_word=keyword)
 
     salary_trend_list = []
 
     dates = items.distinct("create_time")
     for day in dates:
-        
+        # day = day.strftime('%Y-%m-%d')
         item = items(__raw__={'create_time': day})
         salary_avg = item.average('salary_avg')
         salary_trend = [day, round(salary_avg, 2)]
@@ -111,9 +110,7 @@ def get_salary_trend(job_info, keyword, city):
  
     salary_trend = dict(salary_trend_list)
     salary_trend = Series(salary_trend)
-
     return salary_trend
-
 
 def dataViewer(request, city='东莞'):
     # 数据显示
@@ -138,19 +135,41 @@ def dataViewer(request, city='东莞'):
     job_count_rank = dict(get_job_count(job_info, keywords))
     job_count_rank = Series(job_count_rank)
 
-    trends_dict = {kd: get_salary_trend(job_info, kd, city) 
-        for kd in top_keyword if (get_salary_trend(job_info, kd, city).empty) is False}
-    series1 = {kd: {date: value[date] for date in value.index} for kd, value in trends_dict.items()}
-    series1 = {kd: sorted(series1[kd].items(), key=lambda x: x[0], reverse=False) for kd in trends_dict}
-    series1 = Series(series1)
-
 
     context = {
         'cities': items[:20],
         'series': series.sort_values()[::-1][:25],
         'keyword_dict': kd_salary,
         'top_job_counts':job_count_rank.sort_values()[::-1][:25],
-        'series1': series1.sort_index()[::-1][:25],
         'city':city, 
     }
     return render(request, 'data_viewer.html', context)
+
+def get_trend_by_word(request):
+    # use Ajax to reduce dom
+    keyword = request.GET['keyword']
+    city = request.GET['city']
+
+    keyword = str(keyword)
+    city = str(city)
+
+    # 获取工资趋势
+    if(city != '全国' or city != '异地招聘'):
+        pattern = r'^(' + city + '|' + city + ')'
+        items = JobField.objects(Q(key_word=keyword) & Q(job_city=city))
+    else:
+        items = JobField.objects(key_word=keyword)
+
+    salary_trend_list = []
+
+    dates = items.distinct("create_time")
+    for day in dates:
+        item = items(__raw__={'create_time': day})
+        salary_avg = item.average('salary_avg')
+        salary_trend = [str(day)[0:10], round(salary_avg, 2)]
+        salary_trend_list.append(salary_trend)
+    salary_trend_list = Series(salary_trend_list).sort_index()[::-1]
+
+    salary_trend = {'type': 'line', 'name': keyword, 'data':[i for i in salary_trend_list]}
+
+    return JsonResponse(salary_trend, safe=False)

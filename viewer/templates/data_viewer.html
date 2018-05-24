@@ -6,14 +6,22 @@
 {% block content %}
 
 {#   Map of China - 中国地图  #}
-<!-- <div id="container" style="height: 500px; min-width: 310px; max-width: 800px; margin: 0 auto"></div> -->
-    <br>
-    {#  Post average salary bar charts and trends - 岗位平均工资条形图及趋势图   #}
-    <script src="http://code.highcharts.com/highcharts.js"></script>
+ <script src="http://code.highcharts.com/highcharts.js"></script>
     <script src="https://img.hcharts.cn/highcharts/modules/drilldown.js"></script>
-    <div id="container1" style="width: 950px; height: 650px; margin: 0 auto"></div>
+  <script src="http://code.highcharts.com/maps/modules/map.js"></script>
+  <script src="http://code.highcharts.com/maps/modules/data.js"></script>
+  <script type="text/javascript" src="http://sandbox.runjs.cn/uploads/rs/228/zroo4bdf/cn-china-by-peng8.js"></script>
+  <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 
-    <div id="container2" style="height: 750px; min-width: 310px; max-width: 800px; margin: 0 auto"></div>
+
+    {#  Post average salary bar charts and trends - 岗位平均工资条形图及趋势图   #}
+   
+    <div id="container" style="height: 500px; min-width: 310px; max-width: 800px; margin: 0 auto"></div> 
+    <br>
+    <!-- <div id="container1" style="width: 950px; height: 650px; margin: 0 auto"></div> -->
+    <div id="trend" style="width: 950px; height: 750px; margin: 0 auto"></div>
+
+    <div id="top25" style="height: 750px; min-width: 310px; max-width: 800px; margin: 0 auto"></div>
 
     <div id="container3" style="height: 750px; min-width: 310px; max-width: 800px; margin: 0 auto"></div>
 
@@ -43,6 +51,114 @@
 
 
 {% block js %}
+
+<script type="text/javascript">
+  $(function (){
+    $('#trend').highcharts({
+      chart: {
+        type: 'column',
+        events:{
+          drillup: function(e) {
+              // 上钻回调事件
+              console.log(e.seriesOptions);
+            },
+          drilldown: function (e) {
+            $.get('/get_trend_by_word/', {'keyword':String(e.point.name), 'city': '东莞'}, function(ret){
+              console.log(ret.Animals)
+              series = ret
+              console.log(series)
+            });
+          if (!e.seriesOptions) {
+            var chart = this,
+            drilldowns = {
+              type:'line',
+            },
+          series = drilldowns;
+          // Show the loading label
+          chart.showLoading('正在获取数据...');
+          setTimeout(function () {
+            chart.hideLoading();
+            chart.addSeriesAsDrilldown(e.point, series);
+          }, 1000);
+          }
+          }
+        }
+          // drilldown: function(e){
+          //   var chart=this;
+          //   chart.showLoading('正在获取数据, 请稍后...');
+          //   // 
+          //   var pointName = e.point.name;
+            
+          //   var value1 = [];
+
+          //   $.getJSON('/get_trend_by_word/', {'keyword':String(e.point.name), 'city': '东莞'},function(ret){
+          //     $.each(ret, function(d){
+          //       series = ret
+          //     });
+             
+          //     chart.hideLoading();
+          //     chart.addSeriesAsDrilldown(e.point, {
+          //       type: 'line',
+          //       id:e.point.name,
+          //       name: e.point.name,
+          //       data: ret
+          //     });
+          //   });
+          // }
+        },
+      title: {
+        text: '岗位平均工资'
+      },
+      subtitle: {
+        text: 'Source: 51job.com'
+      },
+      xAxis: {
+        type: 'category'
+        
+      },
+      yAxis: {
+        min: 0,
+        title: {
+          text: '平均工资(k)'
+        }
+      },
+      tooltip:{
+       headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+       pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+         '<td style="padding:0"><b>{point.y:.1f} k</b></td></tr>',
+       footerFormat: '</table>',
+       shared: true,
+       useHTML: true,
+       valueSuffix: '点击职位名称查看工资走向'
+
+      },
+      plotOptions: {
+        column: {
+          pointPadding: 0.2,
+          borderWidth: 4
+        }
+      },
+      scrollbar: {
+        enabled: true
+      },
+      credits: {
+        enabled: false
+      },
+      series: [
+        {% for k, v in series.items %}
+        {
+            name: '{{ k }}',
+            data: [ {name: '{{ k }}', y: {{ v }}, drilldown: '{{ k }}' }],
+        },
+        {% endfor %}
+      ],
+       drilldown: {
+        type:'line',
+        series: []
+      }
+    });
+  });
+</script>
 
 <script type="text/javascript">
     $(function () {
@@ -108,90 +224,6 @@
 </script>
 
 <script language="JavaScript">
-$(document).ready(function() {
-   var chart = {
-      type: 'column'
-   };
-   var title = {
-      text: '岗位平均工资'
-   };
-   var subtitle = {
-      text: 'Source: 51job.com'
-   };
-   var xAxis = {
-      type: 'category'
-   };
-   var yAxis = {
-      min: 0,
-      title: {
-         text: '平均工资 (k)'
-      }
-   };
-   var tooltip = {
-       headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-       pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-         '<td style="padding:0"><b>{point.y:.1f} k</b></td></tr>',
-       footerFormat: '</table>',
-       shared: true,
-       useHTML: true,
-       valueSuffix: '点击职位名称查看工资走向'
-
-   };
-   var plotOptions = {
-      column: {
-         pointPadding: 0.2,
-         borderWidth: 4
-      }
-   };
-   var credits = {
-      enabled: false
-   };
-
-
-    var series = [
-    {% for k, v in series.items %}
-    {
-        name: '{{ k }}',
-        data: [ {name: '{{ k }}', y: {{ v }}, drilldown: '{{ k }}' }],
-    },
-    {% endfor %}
-    ];
-
-    var drilldown = {
-        series: [
-            {% for k, v in series1.items %}
-                {
-                type: 'line',
-                id: '{{ k }}',
-                name: '{{ k }}',
-                data: [
-                    {% for i in v %}
-                        {% for j in i %}
-                            {% if forloop.first %} ['{{ j | date:"Y-m-d" }}', {% endif %}
-                            {% if forloop.last %} {{ j }}], {% endif %}
-                        {% endfor %}
-                    {% endfor %}
-                ]
-                },
-            {% endfor %}
-            ]};
-   var json = {};
-   json.chart = chart;
-   json.title = title;
-   json.subtitle = subtitle;
-   json.tooltip = tooltip;
-   json.xAxis = xAxis;
-   json.yAxis = yAxis;
-   json.series = series;
-   json.plotOptions = plotOptions;
-   json.credits = credits;
-   json.drilldown = drilldown;
-   $('#container1').highcharts(json);
-
-});
-</script>
-
-<script language="JavaScript">
     $(document).ready(function() {
    var chart = {
       type: 'column'
@@ -251,12 +283,12 @@ $(document).ready(function() {
    json.plotOptions = plotOptions;
    json.credits = credits;
 
-   $('#container2').highcharts(json);
+   $('#top25').highcharts(json);
 
 });
 </script>
 
-<!-- <script language="JavaScript">
+<script language="JavaScript">
     Highcharts.setOptions({
     lang: {
         drillUpText: '< 返回 “{series.name}”'
@@ -390,6 +422,5 @@ $.getJSON(geochina + 'china.json&callback=?', function(mapdata) {
         }]
     });
 });
-</script> -->
-
+</script>
 {% endblock %}
