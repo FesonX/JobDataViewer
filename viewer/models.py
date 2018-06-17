@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
- 
-from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from mongoengine import *
-
-
 
 @python_2_unicode_compatible
 class JobField(Document):
@@ -35,16 +31,3 @@ class JobField(Document):
 
     def __str__(self):
         pass
-
-
-
-    # class Meta:
-    #     verbose_name = '职位关键词'
-    #     verbose_name_plural = '职位关键词'
-    #     ordering = ['key_word']  # 按照职位关键词排序
-    #     managed = True
-
-    # def get_jobs_by_modules(self):
-    #     df = pd.read_csv(r'../JobCrawler/JobCrawler/data/job_dg.csv')
-    #     return df
-

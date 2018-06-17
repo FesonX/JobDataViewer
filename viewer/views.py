@@ -1,13 +1,9 @@
 from django.shortcuts import render
-from django.template.loader import get_template
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.core.paginator import Paginator
 
 from .models import JobField
-from pandas import Series, DataFrame
-import pandas as pd
-import datetime
-import json
+from pandas import Series
 from mongoengine import connect
 from mongoengine.queryset.visitor import Q
 
@@ -40,7 +36,6 @@ def document(request):
     }
 
     return render(request, 'document.html', context)
-
 
 
 # ----------------
@@ -90,6 +85,7 @@ def get_average_salary(job_info, keyword, city):
 
     return round(salary_avg, 2)
 
+
 def get_salary_trend(job_info, keyword, city):
     # 获取工资趋势
     if(city != '全国' or city != '异地招聘'):
@@ -112,9 +108,9 @@ def get_salary_trend(job_info, keyword, city):
     salary_trend = Series(salary_trend)
     return salary_trend
 
+
 def dataViewer(request, city='东莞'):
     # 数据显示
-
     job_info = JobField.objects
     keywords = job_info.distinct("key_word")
 
@@ -134,7 +130,6 @@ def dataViewer(request, city='东莞'):
 
     job_count_rank = dict(get_job_count(job_info, keywords))
     job_count_rank = Series(job_count_rank)
-
 
     context = {
         'cities': items[:20],

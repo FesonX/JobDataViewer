@@ -14,6 +14,7 @@ You can find the project in [JobCrawler](https://github.com/FesonX/JobCrawler)
 
 ## Run JobDataViewer
 Before Running the project, type`pip install -r requirements.txt` to install requirements.
+
 type `python manage.py runserver` in terminal
 
 ## Stop JobDataViewer

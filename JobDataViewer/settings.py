@@ -25,7 +25,9 @@ SECRET_KEY = 'uf!(rzo!%h^+u)$&4tvu@=5t(2e_n=&q)_9qh&1tenu6$a2_h%'
 # SECURITY WARNING: don't run witrh debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# If U use CVM like Tencent Cloud Server, you should add CVM public ip
+# in ALLOWED_HOST like ALLOWED_HOSTS = ['123.567']
+ALLOWED_HOSTS = [] 
 
 
 # Application definition
@@ -38,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'viewer',
-    'mongonaut',
+    # 'mongonaut',
     'mongoengine.django.mongo_auth',
     # Django Debug Toolbar
     'debug_toolbar',
@@ -140,4 +142,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
