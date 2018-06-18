@@ -5,20 +5,20 @@
 
 {% block content %}
 
-{#   Map of China - 中国地图  #}
- <script src="http://code.highcharts.com/highcharts.js"></script>
-    <script src="https://img.hcharts.cn/highcharts/modules/drilldown.js"></script>
-  <script src="http://code.highcharts.com/maps/modules/map.js"></script>
-  <script src="http://code.highcharts.com/maps/modules/data.js"></script>
+  <script src="http://code.highcharts.com/highcharts.js"></script>
+  <script src="https://img.hcharts.cn/highcharts/modules/drilldown.js"></script>
+  {#   Map of China - 中国地图  #}
+<!--   <script src="http://code.highcharts.com/maps/modules/map.js"></script>
+  <script src="http://code.highcharts.com/maps/modules/data.js"></script> -->
   <script type="text/javascript" src="http://sandbox.runjs.cn/uploads/rs/228/zroo4bdf/cn-china-by-peng8.js"></script>
   <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 
+    {#   Map of China - 中国地图  #}
+    <!-- <div id="container" style="height: 500px; min-width: 310px; max-width: 800px; margin: 0 auto"></div>  -->
 
     {#  Post average salary bar charts and trends - 岗位平均工资条形图及趋势图   #}
    
-    <div id="container" style="height: 500px; min-width: 310px; max-width: 800px; margin: 0 auto"></div> 
     <br>
-    <!-- <div id="container1" style="width: 950px; height: 650px; margin: 0 auto"></div> -->
     <div id="trend" style="width: 950px; height: 750px; margin: 0 auto"></div>
 
     <div id="top25" style="height: 750px; min-width: 310px; max-width: 800px; margin: 0 auto"></div>
@@ -169,7 +169,7 @@
             plotShadow: false
         },
         title: {
-            text: '各大城市职位数量占比'
+            text: '各大地区职位数量占比'
         },
         tooltip: {
             headerFormat: '{series.name}<br>',
@@ -288,7 +288,7 @@
 });
 </script>
 
-<script language="JavaScript">
+<!-- <script language="JavaScript">
     Highcharts.setOptions({
     lang: {
         drillUpText: '< 返回 “{series.name}”'
@@ -422,5 +422,5 @@ $.getJSON(geochina + 'china.json&callback=?', function(mapdata) {
         }]
     });
 });
-</script>
+</script> -->
 {% endblock %}

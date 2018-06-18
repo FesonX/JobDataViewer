@@ -22,7 +22,7 @@ Scroll down to get English version.
 
 使用Scrapy抓取
 
-爬取项目源代码，请移步 [[JobCrawler](https://github.com/FesonX/JobCrawler)](https://github.com/FesonX/JobCrawler) 
+爬取项目源代码，请移步 [JobCrawler](https://github.com/FesonX/JobCrawler)
 
 
 
