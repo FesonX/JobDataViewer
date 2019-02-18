@@ -109,7 +109,7 @@ def get_salary_trend(job_info, keyword, city):
     return salary_trend
 
 
-def dataViewer(request, city='东莞'):
+def data_viewer(request, city='东莞'):
     # 数据显示
     job_info = JobField.objects
     keywords = job_info.distinct("key_word")
