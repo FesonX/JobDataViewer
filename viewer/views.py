@@ -74,9 +74,9 @@ def get_job_count(job_info, keywords):
     return items
 
 
-def get_average_salary(job_info, keyword, city): 
+def get_average_salary(job_info, keyword, city):
     # 获取平均工资
-    if (city != "全国" or city != "异地招聘"):
+    if city != "全国" or city != "异地招聘":
         items = JobField.objects(Q(key_word=keyword) & Q(job_city=city))
     else:
         return 0
@@ -88,7 +88,7 @@ def get_average_salary(job_info, keyword, city):
 
 def get_salary_trend(job_info, keyword, city):
     # 获取工资趋势
-    if(city != '全国' or city != '异地招聘'):
+    if city != '全国' or city != '异地招聘':
         pattern = r'^(' + city + '|' + city + ')'
         items = JobField.objects(Q(key_word=keyword) & Q(job_city=city))
     else:
@@ -115,12 +115,12 @@ def dataViewer(request, city='东莞'):
     keywords = job_info.distinct("key_word")
 
     kd_salary = {kd: get_average_salary(job_info, kd, city)
-     for kd in keywords if get_average_salary(job_info, kd, city)}
+                 for kd in keywords if get_average_salary(job_info, kd, city)}
 
     kd_salary = Series(kd_salary)
     kd_salary = kd_salary.sort_values()[::-1][:25]
     # 为了减少运算量
-    top_keyword = list(kd_salary.index)
+    # top_keyword = list(kd_salary.index)
 
     frame = Series(kd_salary)
     series = {index: frame[index] for index in frame.index}
@@ -135,10 +135,11 @@ def dataViewer(request, city='东莞'):
         'cities': items[:20],
         'series': series.sort_values()[::-1][:25],
         'keyword_dict': kd_salary,
-        'top_job_counts':job_count_rank.sort_values()[::-1][:25],
-        'city':city, 
+        'top_job_counts': job_count_rank.sort_values()[::-1][:25],
+        'city': city,
     }
     return render(request, 'data_viewer.html', context)
+
 
 def get_trend_by_word(request):
     # use Ajax to reduce dom
@@ -149,8 +150,8 @@ def get_trend_by_word(request):
     city = str(city)
 
     # 获取工资趋势
-    if(city != '全国' or city != '异地招聘'):
-        pattern = r'^(' + city + '|' + city + ')'
+    if city != '全国' or city != '异地招聘':
+        # pattern = r'^(' + city + '|' + city + ')'
         items = JobField.objects(Q(key_word=keyword) & Q(job_city=city))
     else:
         items = JobField.objects(key_word=keyword)
@@ -165,6 +166,6 @@ def get_trend_by_word(request):
         salary_trend_list.append(salary_trend)
     salary_trend_list = Series(salary_trend_list).sort_index()[::-1]
 
-    salary_trend = {'type': 'line', 'name': keyword, 'data':[i for i in salary_trend_list]}
+    salary_trend = {'type': 'line', 'name': keyword, 'data': [i for i in salary_trend_list]}
 
     return JsonResponse(salary_trend, safe=False)

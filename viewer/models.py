@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.utils.encoding import python_2_unicode_compatible
 from mongoengine import *
 
+
 @python_2_unicode_compatible
 class JobField(Document):
     # 职位ID
@@ -11,6 +12,8 @@ class JobField(Document):
     job_name = StringField(max_length=256)
     # 职位城市
     job_city = StringField(max_length=256)
+    # 抓取地区
+    area = StringField(max_length=256)
     # 抓取关键词
     key_word = StringField(max_length=256)
     # 职位创建时间
