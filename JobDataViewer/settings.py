@@ -40,11 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'viewer',
-    # 'mongonaut',
-    'mongoengine.django.mongo_auth',
-    # Django Debug Toolbar
-    'debug_toolbar',
-    # 'debug_toolbar_mongo',
 ]
 
 INTERNAL_IPS = ("127.0.0.1",)
@@ -56,8 +51,6 @@ DEBUG_TOOLBAR_CONFIG = {'JQUERY_URL': r"/static/JS/jquery-2.1.4.min.js"}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    # Enable Django Debug Toolbar
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
