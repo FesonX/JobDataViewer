@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block title %}
+编程语言排名
+{% endblock %}
+{% block content %}
+    <div class="row clearfix">
+        <div class="col-md-12 column">
+            <div class="jumbotron">
+                <h1>莞工 IT 言职</h1>
+                <h2>本月编程语言榜首是{{ top.name }}</h2>
+                <p>占比 {{ top.ratio }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="text-center">
+        <h3>{{ top.month }}月份编程语言排行榜</h3>
+        <h5>Source: tiobe.com</h5>
+    </div>
+
+    <div class='panel panel-default'>
+        <div class='panel-body'>
+            {# Language Ratio Chart - 编程语言占比图 #}
+            <div id="container3"></div>
+        </div>
+    </div>
+
+    <div class='panel-default' id="salary_table">
+        {# Language Ranking table - 编程语言排行榜 #}
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>排名</th>
+                <th>名称</th>
+                <th>占比</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for item in ranking %}
+                <tr>
+                    <td>{{ item.ranking }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.ratio }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="https://img.hcharts.cn/highcharts/modules/drilldown.js"></script>
+    <script type="text/javascript" src="http://sandbox.runjs.cn/uploads/rs/228/zroo4bdf/cn-china-by-peng8.js"></script>
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <script type="text/javascript">
+    $(function () {
+        $('#container3').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+        },
+            title: {text: '各开发语言占比'},
+            tooltip: {
+                headerFormat: '{series.name}<br>',
+                pointFormat: '{point.name}: <b>{point.percentage:.1f}%</b>'},
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                        style: {
+                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'}
+                            },
+                    states: {
+                        hover: {enabled: false}},
+                    slicedOffset: 20,         // 突出间距
+                    point: {                  // 每个扇区是数据点对象，所以事件应该写在 point 下面
+                    events: {
+                        // 鼠标滑过是，突出当前扇区
+                        mouseOver: function() {
+                            this.slice();
+                        },
+                        // 鼠标移出时，收回突出显示
+                        mouseOut: function() {
+                            this.slice();
+                        },
+                        // 默认是点击突出，这里屏蔽掉
+                        click: function() {
+                            return true;
+                        }
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: '开发语言占比',
+            data: [
+                {% for item in ratio_list %}
+                  {{item|safe}},
+                {% endfor %}
+            ]
+        }]
+    });
+});
+</script>
+{% endblock %}

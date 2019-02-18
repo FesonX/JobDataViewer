@@ -16,98 +16,12 @@
 </head>
 
 <body>
-
+{% include "header.html" %}
 <div class="container">
-  <div class="row clearfix">
-    <div class="col-md-12 column">
-
-            {# Intro-介绍栏 #}
-      <div class="jumbotron">
-        <h1>
-          IT工程师及需求预测平台
-        </h1>
-        <p>
-          获取IT市场需求, 了解热门技术趋势.
-        </p>
-                <P>
-                    快速查看<a href="#trend">行业工资</a>, <a href="#top25">热门职位</a>, <a href="#trend">工资走向</a>
-                    <br>
-                    职位数量越多的职位, 平均薪资更具参考性.<br>
-                    <a href="#trend">工资走向</a>信息, 请在行业工资图中点击对应职位名称.<br>
-                    筛选指定城市数据, 请点击省份, 然后选择城市
-                </P>
-                <br>
-            </div>
-
-            <div class='panel panel-default'>
-                <div class='panel-body'>
-                    {% block content %}
-                    {% endblock %}
-                </div>
-            </div>
-
-        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-            {# Navigation Bar - 导航栏 #}
-        <div class="navbar-header" id="navbar">
-           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                         <span class="sr-only">Toggle navigation</span>
-                         <span class="icon-bar"></span><span class="icon-bar"></span>
-                         <span class="icon-bar"></span></button>
-                    <a class="navbar-brand" href="#">DGUT</a>
-        </div>
-
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav">
-            <li class="active">
-               <a href="#navbar">首页</a>
-            </li>
-            <li>
-               <a href="#trend">行业工资</a>
-            </li>
-                        <li>
-               <a href="#top25">热门职位</a>
-            </li>
-                        <li>
-               <a href="#salary_table">工资排行</a>
-            </li>
-          </ul>
-          <form class="navbar-form navbar-left" role="search">
-            <div class="form-group">
-              <input type="text" class="form-control" />
-            </div> <button type="submit" class="btn btn-default">搜索</button>
-          </form>
-          <ul class="nav navbar-nav navbar-right">
-            <li>
-               <a href="/admin">管理</a>
-            </li>
-            <li class="dropdown">
-               <a href="#" class="dropdown-toggle" data-toggle="dropdown">开发中<strong class="caret"></strong></a>
-              <ul class="dropdown-menu">
-                <li>
-                   开发者: <a href="https://github.com/FesonX">@FesonX</a>
-                </li>
-                <li>
-                   开发者: <a href="https://github.com/huangjiarong">@huangjiarong</a>
-                </li>
-                <li>
-                   <a href="mailto:fesonx@foxmail.com">fesonx@foxmail.com</a>
-                </li>
-                <li class="divider">
-                </li>
-                <li>
-                   <a href="#navbar">Top</a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-
-      </nav>
-      </div>
-    </div>
+    {% block content %}{% endblock %}
 </div>
+{% include "footer.html" %}
 {% block js %}
 {% endblock %}
-  </body>
-
+</body>
 </html>

@@ -24,6 +24,8 @@ Scroll down to get English version.
 
 爬取项目源代码，请移步 [JobCrawler](https://github.com/FesonX/JobCrawler)
 
+若有需要, 可以发送邮件到[fesonx@foxmail.com](mailto:fesonx@foxmail.com)索要测试数据
+
 
 
 ## 运行

@@ -34,3 +34,13 @@ class JobField(Document):
 
     def __str__(self):
         pass
+
+
+class RankField(Document):
+    name = StringField()
+    month = IntField()
+    ranking = StringField()
+    ratio = StringField()
+
+    meta = {'collection': 'tiobe'}
+
