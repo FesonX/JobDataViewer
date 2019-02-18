@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 
-from .models import JobField
+from .models import JobField, RankField
 from pandas import Series
 from mongoengine import connect
 from mongoengine.queryset.visitor import Q
@@ -169,3 +169,14 @@ def get_trend_by_word(request):
     salary_trend = {'type': 'line', 'name': keyword, 'data': [i for i in salary_trend_list]}
 
     return JsonResponse(salary_trend, safe=False)
+
+
+def language_trend(request):
+    items = RankField.objects
+    ratio_list = []
+    for item in items:
+        name = item.name
+        ratio = round(float(item.ratio[:-1]), 2)
+        ratio_list.append([name, ratio])
+    top = RankField.objects.filter()[0]
+    return render(request, 'lang_trend.html', {'ranking': items, 'top': top, 'ratio_list': ratio_list})

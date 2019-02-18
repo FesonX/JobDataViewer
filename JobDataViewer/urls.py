@@ -22,11 +22,10 @@ from viewer import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', views.data_viewer, name='home'),
-    # url(r'^$', views.index, name='index'),
-    # url(r'^city/', views.homepage, name='city'),
+    url(r'^index/', views.data_viewer, name='home'),
     url(r'^chart/', views.data_viewer, name='chart'),
-    url(r'^get_trend_by_word/$', views.get_trend_by_word, name='get_trend_by_word')
+    url(r'^get_trend_by_word/$', views.get_trend_by_word, name='get_trend_by_word'),
+    url(r'^lang_ranking/$', views.language_trend, name='lang-ranking'),
 ]
 
 if settings.DEBUG:
