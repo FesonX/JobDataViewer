@@ -1,6 +1,6 @@
+# coding=utf-8
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.core.paginator import Paginator
 
 from .models import JobField, RankField
 from pandas import Series
@@ -12,35 +12,13 @@ from mongoengine.queryset.visitor import Q
 connect("Spider")
 
 
-# ----------------
-# 分页显示  Pagination-display
-# ----------------
-
-def document(request):
-    limit = 15
-    job_info = JobField.objects
-    # 创建分页对象,第一个参数为可迭代对象, 第二个参数为每页的数目
-    paginator = Paginator(job_info, limit)
-    page = request.GET.get('page')
-
-    loaded = paginator.page(page)
-    # 获取城市列表
-    cities = JobField.distinct("job_city")
-    city_count = len(cities)
-
-    context = {
-        'job_info':loaded,
-        'counts':job_info.count,
-        'cities':cities,
-        'city_count':city_count
-    }
-
-    return render(request, 'document.html', context)
-
+def index(request):
+    return render(request, 'index.html')
 
 # ----------------
 # 数据可视化 Data Visualization
 # ----------------
+
 
 def get_city_ratio(job_info):
     # 获取城市职位数量比例
@@ -89,7 +67,6 @@ def get_average_salary(job_info, keyword, city):
 def get_salary_trend(job_info, keyword, city):
     # 获取工资趋势
     if city != '全国' or city != '异地招聘':
-        pattern = r'^(' + city + '|' + city + ')'
         items = JobField.objects(Q(key_word=keyword) & Q(job_city=city))
     else:
         items = JobField.objects(key_word=keyword)
