@@ -27,7 +27,7 @@ DEBUG = True
 
 # If U use CVM like Tencent Cloud Server, you should add CVM public ip
 # in ALLOWED_HOST like ALLOWED_HOSTS = ['123.567']
-ALLOWED_HOSTS = [] 
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
