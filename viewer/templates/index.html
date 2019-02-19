@@ -25,15 +25,12 @@
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span><span class="icon-bar"></span>
             <span class="icon-bar"></span></button>
-        <a class="navbar-brand" href="http://127.0.0.1:8000/#">DGUT</a>
+        <a class="navbar-brand" href="{% url 'home' %}">DGUT</a>
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-            <li class="active"><a href="http://127.0.0.1:8000/">首页</a></li>
-            <li><a href="http://127.0.0.1:8000/#trend">行业工资</a></li>
-            <li><a href="http://127.0.0.1:8000/#top25">热门职位</a></li>
-            <li><a href="http://127.0.0.1:8000/#salary_table">工资排行</a></li>
-            <li><a href="http://127.0.0.1:8000/lang_ranking/">编程语言排行</a></li>
+            <li class="active"><a href="{% url 'home' %}">首页</a></li>
+            <li><a href="{% url 'lang-ranking' %}">编程语言排行</a></li>
         </ul>
         <form class="navbar-form navbar-left" role="search">
             <div class="form-group"><input type="text" class="form-control"></div>
@@ -41,7 +38,7 @@
         </form>
         <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
-                <a href="http://127.0.0.1:8000/#" class="dropdown-toggle" data-toggle="dropdown">开发中<strong class="caret"></strong></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">开发中<strong class="caret"></strong></a>
                 <ul class="dropdown-menu">
                     <li>开发者: <a href="https://github.com/FesonX">@FesonX</a></li>
                     <li>开发者: <a href="https://github.com/huangjiarong">@huangjiarong</a></li>
@@ -59,10 +56,10 @@
             <div class="jumbotron">
                 <h1>IT言职</h1>
                 <p>获取IT市场需求, 了解热门技术趋势.</p>
-                <p>快速查看<a href="http://127.0.0.1:8000/#trend">行业工资</a>,<a href="http://127.0.0.1:8000/#top25">热门职位</a>, <a href="http://127.0.0.1:8000/#trend">工资走向</a>
+                <p>快速查看<a href="#trend">行业工资</a>,<a href="#top25">热门职位</a>, <a href="#trend">工资走向</a>
                     <br>职位数量越多的职位, 平均薪资更具参考性.
                     <br>
-                    <a href="http://127.0.0.1:8000/#trend">工资走向</a>信息, 请在行业工资图中点击对应职位名称.<br>
+                    <a href="#trend">工资走向</a>信息, 请在行业工资图中点击对应职位名称.<br>
                     筛选指定城市数据, 请点击省份, 然后选择城市</p><br>
             </div>
 
@@ -229,7 +226,7 @@
 </div>
 <div class="container">
     <hr>
-    <p class="text-center">© Copyright <a href="http://127.0.0.1:8000/github.com/FesonX">FesonX</a></p>
+    <p class="text-center">© Copyright <a href="github.com/FesonX">FesonX</a></p>
 </div>
 
 
