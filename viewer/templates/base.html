@@ -1,30 +1,21 @@
-<!-- base.html -->
-<!DOCTYPE html>
-<html>
+{% load staticfiles %} <!DOCTYPE html>
+<html lang="zh-cn">
 <head>
-    <meta charset='utf-8'>
-    <title>
-        {% block title %} {% endblock %}
-    </title>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
-            integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous">
-    </script>
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
 </head>
-
-<body>
-{% include "header.html" %}
-<div class="container">
-    {% block content %}{% endblock %}
-</div>
-{% include "footer.html" %}
-{% block js %}
-{% endblock %}
-</body>
+    <body>
+        {% include "header.html" %}
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+        {% include "footer.html" %}
+        {% block javascript %}
+        {% endblock %}
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+    </body>
 </html>

@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% load article_tags %}
+{% load staticfiles %}
+{% block title %}Article Detail{% endblock %}
+{% block content %}
+    {% with total_likes=article.wow.count wow=article.wow.all %}
+
+        <div class="container">
+        <div class="col-md-9">
+            <div align="center">
+                <header>
+                    <h1>{{ article.title }}</h1>
+                    <p>
+                        <a href="{% url 'article:author_titles' article.author.username %}">
+                            {{article.author.username}}</a>
+                        <span style="margin-left: 20px" class="glyphicon glyphicon-thumbs-up">
+                            {{ total_likes }}&nbsp;</span>
+                        <span style="margin-left: 20px" >{{ total_views }}&nbsp;view{{ total_views | pluralize}}</span>
+                    </p>
+                    <p><span style="margin-right: 10px"><strong>Tags:</strong></span>
+                        {# DO NOT leave space before 'join' #}
+                        {{ article.article_tag.all | join:"," }} </p>
+                </header>
+                <hr>
+                <link rel="stylesheet" href="{% static 'editor/css/editormd.preview.css' %}" />
+                <div id='editormd-view'>
+                    <textarea id="append-test" style="display:none;">{{ article.body }}</textarea>
+                </div>
+                <div>
+                    <p class="text-center">
+                        <a onclick="like_article({{ article.id }}, 'wow')" href="#">
+                            <span class="glyphicon glyphicon-thumbs-up">wow</span>
+                        </a>
+                        <a onclick="like_article({{ article.id }}, 'dislike')" href="#">
+                            <span class="glyphicon glyphicon-thumbs-down">dislike</span>
+                        </a>
+                    </p>
+                </div>
+                <div>
+                    <p class="text-center"><strong>People who like this article...</strong></p>
+                    {% for user in article.wow.all %}
+                    <p class="text-center">{{ user.username }}</p>
+                        {% empty %}
+                        <p class="text-center">Nobody shows attitude to this article.</p>
+                    {% endfor %}
+                </div>
+            <hr>
+
+            </div>
+        <div>
+            <h3>
+                    {{ article.comments.count }}&nbsp;Comment{{ article.comments.count | pluralize }}</h3>
+                {% for comment in article.comments.all %}
+                <div>
+                    <p><strong>{{ comment.reviewer }}</strong>&nbsp;said:</p>
+                    <p style="margin-left: 40px">{{ comment.body }}</p>
+                </div>
+                    {% empty %}
+                    <p>No comment yet.</p>
+                {% endfor %}
+        <br>
+            <h3>Leave a comment</h3>
+            <form action="." method="post" class="form-horizontal" >
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">*Name</label>
+                    <div class="col-sm-10">
+                        {{ comment_form.reviewer }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">*Comment</label>
+                    <div class="col-sm-10">
+                        {{ comment_form.body }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <p><input type="submit" value="Post" class="btn btn-primary"></p>
+                    </div>
+                </div>
+            </form>
+            </div>
+        </div>
+
+            <div class="col-md-3">
+                <p><h3>Most Popular Articles</h3></p>
+                <ol>
+                    {% for article_rank in most_viewed %}
+                        <li>
+                        <a href="{{ article_rank.get_url_path }}">{{ article_rank.title }}</a>
+                        </li>
+                    {% endfor %}
+                </ol>
+            <hr>
+                <p><h3>Latest Articles</h3></p>
+                {% latest_articles %}
+            <hr>
+                <p><h3>Most Commented Articles</h3></p>
+                {% most_commented_articles as most_commented %}
+                <ol>
+                    {% for article in most_commented %}
+                        <li><a href="{{ article.get_url_path }}">{{ article.title }}</a> </li>
+
+                    {% endfor %}
+
+                </ol>
+            <hr>
+                <p><h3>You Might Like...</h3></p>
+                {% for article in similar_articles %}
+                    <p><a href="{{ article.get_url_path }}">{{ article.title }}</a></p>
+                    {% empty %}
+                    <p>Oops, no articles to shown.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+<script src='{% static "js/jquery.js" %}'></script>
+<script src='{% static "editor/lib/marked.min.js" %}'></script>
+<script src='{% static "editor/lib/prettify.min.js" %}'></script>
+<script src='{% static "editor/lib/raphael.min.js" %}'></script>
+<script src='{% static "editor/lib/underscore.min.js" %}'></script>
+<script src='{% static "editor/lib/sequence-diagram.min.js" %}'></script>
+<script src='{% static "editor/lib/flowchart.min.js" %}'></script>
+<script src='{% static "editor/lib/jquery.flowchart.min.js" %}'></script>
+<script src='{% static "editor/editormd.js" %}'></script>
+<script type="text/javascript" src="{% static 'js/layer.js' %}"></script>
+<script type="text/javascript">
+
+$(function(){
+    editormd.markdownToHTML("editormd-view", {
+        htmlDecode: "style, script, iframe",
+        emoji: true,
+        taskList:true,
+        tex:true,
+        flowChart:true,
+        sequenceDiagram : true,
+    });
+});
+
+function like_article(id, action){
+    $.ajax({
+        url: "{% url 'article:like_article' %}",
+        type: "POST",
+        data: {"id": id, "action": action},
+        success: function(e){
+            if(e == "1"){
+                layer.msg("Thanks for your like!");
+                window.location.reload();
+            }else {
+                layer.msg("What's wrong");
+                window.location.reload();
+            }
+        }
+    });
+}
+
+</script>
+    {% endwith %}
+{% endblock %}

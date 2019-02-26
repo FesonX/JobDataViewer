@@ -1,0 +1,138 @@
+{% extends "article/base.html" %}
+{% load staticfiles %}
+{% block content %}
+<div>
+<p class="text-right">
+    <button class="btn btn-primary" id="add_column" onclick="add_column()">
+    Add Column
+</button>
+</p>
+
+<table class="table table-hover">
+    <tr>
+        <td>序号</td>
+        <td>栏目名称</td>
+        <td>操作</td>
+    </tr>
+    {% for column in columns %}
+        <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ column.column }}</td>
+        <td>
+            <a name="edit" href="javascript:" onclick="edit_column(this, {{ column.id }})">
+                <span class="glyphicon glyphicon-pencil"></span>
+            </a>
+            &nbsp;
+            <a name="delete" href="javascript:" onclick="del_column(this, {{ column.id }})">
+                <span class="glyphicon glyphicon-trash"></span>
+            </a>
+        </td>
+        </tr>
+        {% empty %}
+        <p>Oops, 空空如也...</p>
+    {% endfor %}
+
+</table>
+
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/layer.js' %}"></script>
+
+    <script type="text/javascript">
+    function add_column() {
+        var index = layer.open({
+            title: "Add Column",
+            area: ['400', '200px'],
+            type: 1,
+            skin: "layui-layer-rim",
+            content:'<div class="text-center" style="margin-top: 20px"><p>Add New Column</p><p>{{ column_form.column }}</p></div>',
+            btn: ['Ok', 'Cancel'],
+            yes: function (index, layero) {
+                column_name = $('#id_column').val();
+                $.ajax({
+                    url: '{% url "article:article_column" %}',
+                    type: 'POST',
+                    data: {"column": column_name},
+                    success: function (e) {
+                        if (e == "1"){
+                            layer.msg("Column Added Successfully", {time: 3000});
+                            parent.location.reload();
+
+                        }else {
+                            layer.msg("Column Exists.")
+                        }
+                    },
+                });
+                return false;
+            },
+            btn2: function (index, layero) {
+                layer.close(index);
+            }
+        });
+    }
+
+    function edit_column(the, column_id) {
+        var name = $(the).parents("tr").children("td").eq(1).text();
+        var index = layer.open({
+            type: 1,
+            skin: "layui-layer-rim",
+            area: ["400px", "200px"],
+            title: "编辑栏目",
+            content: '<div class="text-center" style="margin-top: 20px"><p>Edit Column Name</p><p><input type="text" id="new_name" value="'+name+'"></p></div>',
+            btn: ['OK', 'Cancel'],
+            yes: function (index, layero) {
+                new_name = $('#new_name').val();
+                $.ajax({
+                    url: '{% url "article:rename_article_column" %}',
+                    type: 'POST',
+                    data: {"column_id": column_id, "column_name": new_name},
+                    success: function (e) {
+                        if (e == "1"){
+                            parent.location.reload();
+                            layer.msg("Column Changed", {time: 3000});
+                        }else {
+                            layer.msg("Failed To Change, Try Again.")
+                        }
+                    },
+                });
+                return false;
+            },
+            btn2: function (index, layero) {
+                layer.close(index);
+            }
+        })
+    }
+
+    function del_column(the, column_id) {
+        var name = $(the).parents("tr").children("td").eq(1).text();
+        var index = layer.open({
+            type: 1,
+            skin: "layui-layer-rim",
+            area: ["400px", "200px"],
+            title: "删除栏目",
+            content: '<div class="text-center" style="margin-top: 20px"><p>Edit Column Name</p><p>Sure to Delete Column <strong>'+name+'</strong>?</p></div>',
+            btn: ['OK', 'Cancel'],
+            yes: function (index, layero) {
+                new_name = $('#new_name').val();
+                $.ajax({
+                    url: '{% url "article:del_article_column" %}',
+                    type: 'POST',
+                    data: {"column_id": column_id, "column_name": new_name},
+                    success: function (e) {
+                        if (e == "1"){
+                            parent.location.reload();
+                            layer.msg("Column Deleted", {time: 3000});
+                        }else {
+                            layer.msg("Failed To Delete, Try Again.")
+                        }
+                    },
+                });
+                return false;
+            },
+            btn2: function (index, layero) {
+                layer.close(index);
+            }
+        })
+    }
+    </script>
+
+</div>{% endblock %}

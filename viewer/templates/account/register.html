@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}
+Register
+{% endblock %}
+
+{% block content %}
+<div class="row text-center vertical-middle-sm">
+        <form action="." method="post" name="Register_Form" class="form-horizontal">
+            {% csrf_token %}
+            <h3 class="form-signin-heading">Register | FesonX's Blog</h3>
+            <p>If u have a account,
+                Please <strong><a href="{% url 'account:user_login' %}">LOGIN</a></strong></p>
+            <hr class="colorgraph"><br>
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}" class="col-md-5 control-label">
+                    Username
+                </label>
+                <div class="col-md-6 text-left">{{ form.username }}</div>
+            </div>
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}" class="col-md-5 control-label">
+                    Email
+                </label>
+                <div class="col-md-6 text-left">{{ form.email }}</div>
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}" class="col-md-5 control-label">
+                    Password
+                </label>
+                <div class="col-md-6 text-left">{{ form.password }}</div>
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}" class="col-md-5 control-label">
+                    Confirm Password
+                </label>
+                <div class="col-md-6 text-left">{{ form.password2 }}</div>
+            </div>
+            <div class="form-group">
+                <label for="{{ profile.birth.id_for_label }}" class="col-md-5 control-label">
+                    Birthday
+                </label>
+                <div class="col-md-6 text-left">{{ profile.birth }}</div>
+            </div>
+            <div class="form-group">
+                <label for="{{ profile.phone.id_for_label }}" class="col-md-5 control-label">
+                    Phone
+                </label>
+                <div class="col-md-6 text-left">{{ profile.phone }}</div>
+            </div>
+            <button class="btn btn-lg btn-primary"  name="Submit" value="REGISTER" type="submit">REGISTER</button>
+        </form>
+</div>
+
+{% endblock %}

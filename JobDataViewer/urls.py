@@ -15,8 +15,8 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from JobDataViewer import settings
 from django.conf.urls import url, include
+from django.views.generic import TemplateView
 from viewer import views
 
 
@@ -26,10 +26,12 @@ urlpatterns = [
     url(r'^chart/', views.data_viewer, name='chart'),
     url(r'^get_trend_by_word/$', views.get_trend_by_word, name='get_trend_by_word'),
     url(r'^lang_ranking/$', views.language_trend, name='lang-ranking'),
+    url(r'^blog/', include('blog.urls')),
+    # Using app_name with include is deprecated in Django 1.9
+    # and does not work in Django 2.0. Set app_name in account/urls.py instead
+    # url(r'^account/', include('account.urls', namespace='account', app_name='account')),
+    url(r'^account/', include('account.urls')),
+    url(r'^article/', include('article.urls')),
+    url(r'home/', TemplateView.as_view(template_name="index.html"), name="index"),
+    url(r'^image/', include('image.urls')),
 ]
-
-if settings.DEBUG:
-    import debug_toolbar
-    urlpatterns = [
-        url(r'^__debug__/', include(debug_toolbar.urls)),
-    ] + urlpatterns

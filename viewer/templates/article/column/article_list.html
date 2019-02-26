@@ -1,0 +1,76 @@
+{% extends "article/base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}
+Articles List
+{% endblock %}
+
+{% block content %}
+<div>
+<table class="table table-hover">
+    <tr>
+        <td>No. </td>
+        <td>Title</td>
+        <td>Column</td>
+        <td>Operation</td>
+    </tr>
+    {% for article in articles %}
+        <tr id="{{ article.id }}">
+        <td>{{ forloop.counter }}</td>
+            <td><a href="{{ article.get_absolute_url }}"> {{ article.title }} </a></td>
+        <td>{{ article.column }}</td>
+        <td>
+            <a name="edit" href="{% url 'article:edit_article' article.id %}">
+                <span class="glyphicon glyphicon-pencil"></span>
+            </a>
+            &nbsp;
+            <a name="delete" href="javascript:" onclick="del_article(this, {{ article.id }})">
+                <span class="glyphicon glyphicon-trash"></span>
+            </a>
+        </td>
+        </tr>
+{#        {% empty %}#}
+{#        <p>Oops, 空空如也...</p>#}
+    {% endfor %}
+</table>
+{% include "paginator.html" %}
+<script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/layer.js' %}"></script>
+
+    <script type="text/javascript">
+    function del_article(the, article_id) {
+        var name = $(the).parents("tr").children("td").eq(1).text();
+        var index = layer.open({
+            type: 1,
+            skin: "layui-layer-rim",
+            area: ["400px", "200px"],
+            title: "删除文章",
+            content: '<div class="text-center" style="margin-top: 20px"><p>Delete Article</p><p>Sure to Delete Column <strong>'+name+'</strong>?</p></div>',
+            btn: ['OK', 'Cancel'],
+            yes: function (index, layero) {
+                new_name = $('#new_name').val();
+                $.ajax({
+                    url: '{% url "article:del_article" %}',
+                    type: 'POST',
+                    data: {"article_id": article_id, "article_name": new_name},
+                    success: function (e) {
+                        if (e == "1"){
+                            parent.location.reload();
+                            layer.msg("Article Deleted", {time: 3000});
+                        }else {
+                            layer.msg("Failed To Delete, Try Again.")
+                        }
+                    },
+                });
+                return false;
+            },
+            btn2: function (index, layero) {
+                layer.close(index);
+            }
+        })
+    }
+    </script>
+</div>
+
+{% endblock %}

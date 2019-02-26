@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}
+Moments
+{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/mansory-style.css' %}" type="text/css"/>
+<div class="container">
+    <div id="my-gallery-container">
+        {% for image in images %}
+            <div class="falls_item h150" data-order="{{ image.id }}">
+                <a href="javascript:void(0)" onclick="display_image('{{ image.user }}', '{{ image.title }}',
+                        '{{ image.image.url }}', '{{ image.description }}', '{{ request.get_host }}')">
+                    <img src="{{ image.image.url }}"></a>
+                <p>{{ image.title }}</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/mp.mansory.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/layer.js' %}"></script>
+    <script type="text/javascript">
+		jQuery(document).ready(function ( $ ) {
+			$("#my-gallery-container").mpmansory(
+				{
+					childrenClass: 'item', // default is a div
+					columnClasses: 'padding', //add classes to items
+					breakpoints:{
+						lg: 3,
+						md: 4,
+						sm: 6,
+						xs: 12
+					},
+					distributeBy: { order: false, height: false, attr: 'data-order', attrOrder: 'asc' }, //default distribute by order, options => order: true/false, height: true/false, attr => 'data-order', attrOrder=> 'asc'/'desc'
+					onload: function (items) {
+						//make somthing with items
+					}
+				}
+			);
+		});
+		function display_image(user, title, url, description, host) {
+            layer.open({
+                type: 1,
+                title: title,
+                skin: 'layui-layer-rim',
+                area: ['400px', '400px'],
+                content: '<div class="text-center"><img src="http://'+host+url+'"><p>Publisher:'+user+'</p></div>' +
+                    '<div style="margin-left: 10px">'+description+'</div>'
+            })
+        }
+	</script>
+{% endblock %}

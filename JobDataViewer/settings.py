@@ -40,6 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'viewer',
+    'blog',
+    'account',
+    'article',
+    'image',
+    'sorl.thumbnail',
 ]
 
 INTERNAL_IPS = ("127.0.0.1",)
@@ -135,4 +140,30 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
+
+# Configure Redirect url
+LOGIN_REDIRECT_URL = '/home/'
+
+# Config Email
+EMAIL_HOST = 'smtp.qq.com'
+EMAIL_HOST_USER = '******'
+EMAIL_HOST_PASSWORD = '******'
+EMAIL_PORT = 25
+
+# EMAIL_USE_TLS = False
+EMAIL_USE_TTL = True
+DEFAULT_FROM_EMAIL = "******"
+
+# Config Redis
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+REDIS_DB = 0
+
+# Image Configuration
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')

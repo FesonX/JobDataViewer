@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}
+My Information
+{% endblock %}
+
+{% block content %}
+<div class="row text-center vertical-middle-sm">
+    <h1>My Information</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-horizontal" action="." method="post">{% csrf_token %}
+                <div class="form-group">
+                    <div class="col-md-4 text-right"><span>Username:</span></div>
+                    <div class="col-md-8 text-left">{{ user.username }}</div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4 text-right"><span>Email:</span></div>
+                    <div class="col-md-8 text-left">{{ user_form.email }}</div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4 text-right"><span>Birthday:</span></div>
+                    <div class="col-md-8 text-left">{{ userprofile_form.birth }}</div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4 text-right"><span>Phone:</span></div>
+                    <div class="col-md-8 text-left">{{ userprofile_form.phone }}</div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4 text-right"><span>School:</span></div>
+                    <div class="col-md-8 text-left">{{ userinfo_form.school }}</div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4 text-right"><span>Profession:</span></div>
+                    <div class="col-md-8 text-left">{{ userinfo_form.profession }}</div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4 text-right"><span>Company:</span></div>
+                    <div class="col-md-8 text-left">{{ userinfo_form.company }}</div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4 text-right"><span>Address:</span></div>
+                    <div class="col-md-8 text-left">{{ userinfo_form.address }}</div>
+                </div>
+               <div class="form-group">
+                    <div class="col-md-4 text-right"><span>About Me:</span></div>
+                    <div class="col-md-8 text-left">{{ userinfo_form.about }}</div>
+                </div>
+                <button class="btn btn-lg btn-primary"  name="Submit" value="Sends" type="submit">Send</button>
+            </form>
+        </div>
+
+        <div class="col-md-6">
+            {% load staticfiles %}
+            <div style="margin-right: 100px">
+                {% if userinfo.photo %}
+                    <img src="{{ userinfo.photo | striptags }}"
+                         class="img-circle" id="my_photo">
+                {% else %}
+                    <img src="{% static 'images/Profile.jpg' %}"
+                        class="img-circle" width="150px" name="user_profile" id="my_photo">
+                {% endif %}
+            </div>
+            <div style="margin-right: 100px"><button class="btn btn-primary"
+            id="upload_image" onclick="upload_image_layer()">Edit</button> </div>
+        </div>
+    </div>
+</div>
+
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/layer.js' %}"></script>
+
+    <script>
+    function upload_image_layer() {
+        layer.open({
+            title: "Upload Profile",
+            area: ['650px', '550px'],
+            type: 2,
+            content:"{% url 'account:my_image' %}",
+        })
+    }
+    </script>
+{% endblock %}
